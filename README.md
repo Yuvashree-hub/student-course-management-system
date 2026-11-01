@@ -2,8 +2,8 @@
 
 A full-stack web application where students can register, log in, browse and enroll in courses, track their learning progress, receive real-time notifications and chat with other users, while admins manage courses and students.
 
-> **Live Frontend:**https://student-course-management-system-xi.vercel.apphttps://student-course-management-system-xi.vercel.app
-> **Live Backend API:** https://acadexa-backend-7t4c.onrender.comhttps://acadexa-backend-7t4c.onrender.com
+> **Live Frontend:**https://student-course-management-system-xi.vercel.app
+> **Live Backend API:** https://acadexa-backend-7t4c.onrender.com
 > **GitHub Repository:**https://github.com/Yuvashree-hub/Student-course-management-system
 
 ---
