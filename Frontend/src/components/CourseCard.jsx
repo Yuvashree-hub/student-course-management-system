@@ -14,6 +14,9 @@ export default function CourseCard({ course, enrollment, user, onEnroll, enrolli
       <div className="course-info">
         <span><strong>Duration:</strong> {duration}</span>
         {instructor && <span><strong>Instructor:</strong> {instructor}</span>}
+        {course.moduleCount !== undefined && (
+          <span>{course.moduleCount > 0 ? `${course.moduleCount} modules${course.quizReady ? ' + final quiz' : ''}` : 'Content coming soon'}</span>
+        )}
       </div>
 
       {enrollment ? (
@@ -25,7 +28,11 @@ export default function CourseCard({ course, enrollment, user, onEnroll, enrolli
             </p>
             <progress value={enrollment.progress} max="100" />
           </div>
-          <Link to="/learning" className="btn btn-primary">Continue Learning</Link>
+          {enrollment.status === 'Completed' ? (
+            <Link to={`/certificate/${enrollment.id}`} className="btn btn-gold">🎓 View Certificate</Link>
+          ) : (
+            <Link to={`/learn/${enrollment.id}`} className="btn btn-primary">Continue Learning</Link>
+          )}
         </>
       ) : isStudent ? (
         <button className="btn btn-primary" onClick={() => onEnroll?.(course)} disabled={enrolling}>

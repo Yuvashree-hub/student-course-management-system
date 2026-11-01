@@ -65,3 +65,26 @@ export const validateCourseForm = (v) => ({
   duration: validateRequired(v.duration, 'Duration'),
   description: validateRequired(v.description, 'Description'),
 });
+
+export const validateForgotForm = ({ email }) => ({ email: validateEmail(email) });
+
+export const validateResetForm = ({ password, confirmPassword }) => ({
+  password: validatePassword(password),
+  confirmPassword: validateConfirm(password, confirmPassword),
+});
+
+// Admin course editor: modules + quiz (quiz = exactly 5 complete questions, or empty)
+export const validateCourseContent = (modules, quiz) => {
+  for (const [i, m] of modules.entries()) {
+    if (!m.title.trim()) return `Module ${i + 1}: enter a title`;
+    if (!m.content.trim()) return `Module ${i + 1}: enter the lesson content`;
+    if (m.videoUrl.trim() && !/^https?:\/\/\S+$/i.test(m.videoUrl.trim())) return `Module ${i + 1}: the video link must start with http:// or https://`;
+  }
+  if (quiz.length === 0) return '';
+  if (quiz.length !== 5) return 'The quiz must have exactly 5 questions';
+  for (const [i, q] of quiz.entries()) {
+    if (q.question.trim().length < 3) return `Question ${i + 1}: enter the question`;
+    if (q.options.some((o) => !o.trim())) return `Question ${i + 1}: fill in all 4 options`;
+  }
+  return '';
+};

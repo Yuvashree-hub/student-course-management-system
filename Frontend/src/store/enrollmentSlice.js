@@ -20,17 +20,6 @@ export const enrollCourse = createAsyncThunk('enrollments/enroll', async (course
   }
 });
 
-export const updateEnrollmentProgress = createAsyncThunk(
-  'enrollments/progress',
-  async ({ id, progress }, { rejectWithValue }) => {
-    try {
-      return (await enrollmentApi.setProgress(id, progress)).enrollment;
-    } catch (err) {
-      return rejectWithValue(errorMessage(err));
-    }
-  }
-);
-
 export const unenrollCourse = createAsyncThunk('enrollments/unenroll', async (id, { rejectWithValue }) => {
   try {
     await enrollmentApi.unenrollFromCourse(id);
@@ -64,11 +53,6 @@ const enrollmentSlice = createSlice({
       .addCase(fetchMyEnrollments.rejected, (s, a) => { s.loading = false; s.error = a.payload; })
       .addCase(enrollCourse.fulfilled, (s, a) => { s.actionError = null; s.list.unshift(a.payload); })
       .addCase(enrollCourse.rejected, (s, a) => { s.actionError = a.payload; })
-      .addCase(updateEnrollmentProgress.fulfilled, (s, a) => {
-        s.actionError = null;
-        s.list = s.list.map((e) => (e.id === a.payload.id ? a.payload : e));
-      })
-      .addCase(updateEnrollmentProgress.rejected, (s, a) => { s.actionError = a.payload; })
       .addCase(unenrollCourse.fulfilled, (s, a) => { s.list = s.list.filter((e) => e.id !== a.payload); })
       .addCase(unenrollCourse.rejected, (s, a) => { s.actionError = a.payload; })
       .addCase(logout, () => initial);

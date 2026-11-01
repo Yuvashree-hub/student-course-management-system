@@ -43,6 +43,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} noValidate>
           <FormField label="Email Address" type="email" autoComplete="email" {...field('email')} />
           <FormField label="Password" type="password" autoComplete="current-password" {...field('password')} />
+          <p className="forgot-link"><Link to="/forgot-password">Forgot password?</Link></p>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading || !!success}>
             {loading ? 'Logging in...' : 'Login'}
           </button>

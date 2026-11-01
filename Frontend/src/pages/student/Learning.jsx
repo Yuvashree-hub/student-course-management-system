@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../components/Loader';
 import ErrorState from '../../components/ErrorState';
 import Alert from '../../components/Alert';
-import { fetchMyEnrollments, updateEnrollmentProgress, unenrollCourse, clearActionError } from '../../store/enrollmentSlice';
+import { fetchMyEnrollments, unenrollCourse, clearActionError } from '../../store/enrollmentSlice';
 
 export default function Learning() {
   const dispatch = useDispatch();
@@ -15,12 +15,6 @@ export default function Learning() {
     dispatch(fetchMyEnrollments());
     return () => dispatch(clearActionError());
   }, [dispatch]);
-
-  const setProgress = async (id, progress) => {
-    setBusyId(id);
-    await dispatch(updateEnrollmentProgress({ id, progress: Math.min(100, Math.max(0, progress)) }));
-    setBusyId(null);
-  };
 
   const handleUnenroll = async (e) => {
     if (!window.confirm(`Unenroll from "${e.courseId.title}"? Your progress will be lost.`)) return;
@@ -35,7 +29,7 @@ export default function Learning() {
   return (
     <section className="container page">
       <h1>Learning Workspace</h1>
-      <p className="muted">Track and update your progress in each enrolled course.</p>
+      <p className="muted">Finish every module, then pass the 5-question quiz to complete a course and earn your certificate.</p>
       <Alert type="error">{actionError}</Alert>
 
       {list.length === 0 ? (
@@ -55,8 +49,12 @@ export default function Learning() {
               <progress value={e.progress} max="100" />
               <p className="muted">{e.progress}% complete · {e.courseId.duration}</p>
               <div className="btn-row">
-                <button className="btn btn-primary" disabled={busyId === e.id || e.progress >= 100} onClick={() => setProgress(e.id, e.progress + 25)}>+25% Progress</button>
-                <button className="btn btn-primary" disabled={busyId === e.id || e.progress >= 100} onClick={() => setProgress(e.id, 100)}>Mark as Complete</button>
+                <Link to={`/learn/${e.id}`} className="btn btn-primary">
+                  {e.status === 'Completed' ? 'Review Course' : e.progress > 0 ? 'Continue Course' : 'Start Course'}
+                </Link>
+                {e.status === 'Completed' && (
+                  <Link to={`/certificate/${e.id}`} className="btn btn-gold">🎓 Download Certificate</Link>
+                )}
                 <button className="btn btn-danger" disabled={busyId === e.id} onClick={() => handleUnenroll(e)}>Unenroll</button>
               </div>
             </article>

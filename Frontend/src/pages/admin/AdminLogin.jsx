@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FormField from '../../components/FormField';
 import Alert from '../../components/Alert';
@@ -40,6 +40,7 @@ export default function AdminLogin() {
         <form onSubmit={handleSubmit} noValidate>
           <FormField label="Admin Email" type="email" placeholder="admin@acadexa.com" {...field('email')} />
           <FormField label="Password" type="password" {...field('password')} />
+          <p className="forgot-link"><Link to="/forgot-password">Forgot password?</Link></p>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>{loading ? 'Signing in...' : 'Login to Admin Console'}</button>
         </form>
         <Alert type="error">{localError || error}</Alert>
