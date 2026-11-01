@@ -2,9 +2,9 @@
 
 A full-stack web application where students can register, log in, browse and enroll in courses, track their learning progress, receive real-time notifications and chat with other users, while admins manage courses and students.
 
-> **Live Frontend:** _add your Vercel/Netlify URL here_
-> **Live Backend API:** _add your Render URL here_ (`/api/health`)
-> **GitHub Repository:** _add your repo URL here_
+> **Live Frontend:**https://student-course-management-system-xi.vercel.apphttps://student-course-management-system-xi.vercel.app
+> **Live Backend API:** https://acadexa-backend-7t4c.onrender.comhttps://acadexa-backend-7t4c.onrender.com
+> **GitHub Repository:**https://github.com/Yuvashree-hub/Student-course-management-system
 
 ---
 
@@ -19,8 +19,11 @@ Colleges and training institutes often manage student registration, course catal
 
 ## 3. Features
 - ✅ Student registration & login with **JWT authentication** and **bcrypt** password hashing
+- ✅ **Forgot / reset password** by email (one-time, 15-minute token; only its hash is stored)
 - ✅ Role-based access control (student / admin) and protected routes (frontend + backend)
-- ✅ Course catalogue with search, enrollment, progress tracking (Not Started → In Progress → Completed)
+- ✅ Course catalogue with search and enrollment
+- ✅ **Learning modules + final quiz**: read every module, then pass a 5-question quiz (3/5 to pass, unlimited retries) to complete the course - graded on the server, correct answers never sent to the browser
+- ✅ **Certificate of completion** (print / save as PDF) unlocked by passing the quiz
 - ✅ Student dashboard (profile, stats, enrolled courses, recent notifications)
 - ✅ Admin console: course CRUD, student management, statistics, announcements
 - ✅ **Real-time notifications** (Socket.IO) – new course, enrollment confirmation, completion, admin announcements
@@ -79,7 +82,7 @@ Student_course_management_system/
 cd Backend
 npm install
 # edit .env if needed (MONGO_URI, JWT_SECRET)
-npm run seed        # creates admin, demo student and sample courses
+npm run seed        # creates admin, demo student, sample courses AND their lessons + quizzes (safe to run again)
 npm run dev         # http://localhost:5000
 ```
 
@@ -120,18 +123,23 @@ VITE_SOCKET_URL=http://localhost:5000
 | POST | `/auth/register` | public | Register student |
 | POST | `/auth/login` | public | Login → JWT |
 | GET | `/auth/me` | auth | Current user |
+| POST | `/auth/forgot-password` | public | Email a password-reset link `{email}` |
+| POST | `/auth/reset-password/:token` | public | Set a new password `{password}` |
 | GET | `/students` | admin | List students (`?search=`) |
 | GET | `/students/:id` | self/admin | Get student |
 | PUT/PATCH | `/students/:id` | self/admin | Update student |
 | DELETE | `/students/:id` | self/admin | Delete student |
 | GET | `/courses` | public | List courses |
 | GET | `/courses/:id` | public | Get course |
-| POST | `/courses` | admin | Add course |
+| GET | `/courses/:id/full` | admin | Course with lesson text + quiz answers (editor) |
+| POST | `/courses` | admin | Add course (optional `modules[]` and 5-question `quiz[]`) |
 | PUT/PATCH | `/courses/:id` | admin | Update course |
 | DELETE | `/courses/:id` | admin | Delete course |
 | POST | `/enrollments` | student | Enroll `{courseId}` |
 | GET | `/enrollments/me` | student | My enrollments |
-| PATCH | `/enrollments/:id` | student | Update progress `{progress}` |
+| GET | `/learning/:enrollmentId` | student | Course modules, progress and (when unlocked) the quiz questions |
+| POST | `/learning/:enrollmentId/modules/:moduleId/complete` | student | Mark a module complete |
+| POST | `/learning/:enrollmentId/quiz` | student | Submit quiz answers `{answers:[0-3 x5]}` → score, pass/fail |
 | DELETE | `/enrollments/:id` | student | Unenroll |
 | GET | `/enrollments` | admin | All enrollments |
 | GET | `/notifications` | auth | My notifications |
@@ -147,7 +155,7 @@ Import `postman/ACADEXA.postman_collection.json` into Postman to test every endp
 **Socket.IO events:** `chat:send`, `chat:message`, `chat:typing`, `notification:new`, `presence:update` (connection authenticated with the JWT).
 
 ## 8. Database
-MongoDB with 5 collections – `users`, `courses`, `enrollments`, `notifications`, `messages`. See [`docs/DATABASE_SCHEMA.md`](docs/DATABASE_SCHEMA.md) for the ER diagram.
+MongoDB with 5 collections (courses embed their `modules` and 5-question `quiz`) – `users`, `courses`, `enrollments`, `notifications`, `messages`. See [`docs/DATABASE_SCHEMA.md`](docs/DATABASE_SCHEMA.md) for the ER diagram.
 
 ## 9. Security
 bcrypt password hashing (12 rounds) · JWT verification middleware · role-based authorization · input validation + NoSQL-injection sanitization · restricted CORS · secrets only in `.env` · centralized error handling (400/401/403/404/409/500) · password hash never returned by the API.
@@ -166,6 +174,7 @@ bcrypt password hashing (12 rounds) · JWT verification middleware · role-based
 - Register → Login → JWT stored → protected routes work; no token → `401`
 - Student cannot call admin endpoints → `403`
 - Admin adds a course → students get a real-time notification
-- Student enrolls, updates progress, completes a course
+- Student enrolls, reads every module, passes the quiz (3/5) → course Completed → certificate
+- Student cannot open the quiz before finishing all modules, and cannot skip it
 - Open two browser tabs (two users) → chat messages arrive instantly
 - Resize the browser (desktop / tablet / mobile) → no horizontal scrolling

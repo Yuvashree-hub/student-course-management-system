@@ -47,3 +47,19 @@ export function validateStudentUpdate(req, _res, next) {
   }
   next();
 }
+
+export function validateForgotPassword(req, _res, next) {
+  const { email } = req.body || {};
+  if (typeof email !== 'string' || !EMAIL_RE.test(email.trim())) {
+    return next(new HttpError(400, 'Enter a valid email address'));
+  }
+  next();
+}
+
+export function validateResetPassword(req, _res, next) {
+  const { password } = req.body || {};
+  if (typeof password !== 'string' || password.length < 8 || password.length > 72) {
+    return next(new HttpError(400, 'Password must be between 8 and 72 characters'));
+  }
+  next();
+}

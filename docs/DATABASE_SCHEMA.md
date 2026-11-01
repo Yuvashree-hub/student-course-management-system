@@ -28,6 +28,8 @@ erDiagram
         string description
         string duration
         string instructor
+        array modules "title, content, videoUrl"
+        array quiz "5 x (question, options[4], correctIndex)"
         date createdAt
     }
     ENROLLMENT {
@@ -37,6 +39,11 @@ erDiagram
         date date
         string status "Not Started | In Progress | Completed"
         number progress "0-100"
+        array completedModules
+        number quizAttempts
+        number bestScore
+        number lastScore
+        date passedAt
     }
     NOTIFICATION {
         ObjectId _id PK
@@ -61,8 +68,8 @@ erDiagram
 | Collection | Key fields | Constraints |
 |---|---|---|
 | `users` | name, email, passwordHash, studentId, department, phone, role | `email` unique + lowercase + regex, `role` enum, name 2-80 chars |
-| `courses` | title, description, duration, instructor | title 3-120 chars, all of title/description/duration required |
-| `enrollments` | studentId, courseId, date, status, progress | **unique compound index (studentId, courseId)** - no double enrollment; progress 0-100 |
+| `courses` | title, description, duration, instructor, modules[], quiz[] | title 3-120 chars; title/description/duration required; quiz is empty or **exactly 5** questions with 4 options each |
+| `enrollments` | studentId, courseId, date, status, progress, completedModules[], quizAttempts, bestScore, lastScore, passedAt | **unique compound index (studentId, courseId)** - no double enrollment; progress 0-100 |
 | `notifications` | userId, title, message, type, read | indexed by `userId` |
 | `messages` | from, to, text | text 1-1000 chars, indexed by `from` and `to` |
 
@@ -71,3 +78,6 @@ erDiagram
 * One user receives many **notifications** (deleted together with the user).
 * **messages** link two users (`from` → `to`) and power the real-time chat.
 * Deleting a student removes their enrollments, notifications and messages. Deleting a course removes its enrollments.
+
+## Progress rules
+Finishing all modules = 80% progress; passing the quiz (3 of 5) = 100% and status `Completed`. Progress cannot be edited directly by the student.

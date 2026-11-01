@@ -8,6 +8,12 @@ const enrollmentSchema = new mongoose.Schema(
     date: { type: Date, default: Date.now },
     status: { type: String, enum: ['Not Started', 'In Progress', 'Completed'], default: 'Not Started' },
     progress: { type: Number, min: 0, max: 100, default: 0 },
+    // learning flow: modules finished -> quiz -> certificate
+    completedModules: [{ type: mongoose.Schema.Types.ObjectId }],
+    quizAttempts: { type: Number, default: 0 },
+    bestScore: { type: Number, default: 0 },
+    lastScore: { type: Number, default: 0 },
+    passedAt: { type: Date },
   },
   { timestamps: true }
 );

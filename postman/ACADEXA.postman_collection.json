@@ -5,19 +5,65 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:5000/api" },
-    { "key": "token", "value": "" },
-    { "key": "studentId", "value": "" },
-    { "key": "courseId", "value": "" },
-    { "key": "enrollmentId", "value": "" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "studentId",
+      "value": ""
+    },
+    {
+      "key": "courseId",
+      "value": ""
+    },
+    {
+      "key": "enrollmentId",
+      "value": ""
+    },
+    {
+      "key": "moduleId",
+      "value": ""
+    }
   ],
-  "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
   "item": [
     {
       "name": "Health",
       "item": [
-        { "name": "GET / (server status)", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "http://localhost:5000/" } },
-        { "name": "GET /api/health", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/health" } }
+        {
+          "name": "GET / (server status)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "http://localhost:5000/"
+          }
+        },
+        {
+          "name": "GET /api/health",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
+        }
       ]
     },
     {
@@ -26,97 +72,345 @@
         {
           "name": "Register student",
           "request": {
-            "auth": { "type": "noauth" }, "method": "POST", "url": "{{baseUrl}}/auth/register",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Student\",\n  \"email\": \"test@acadexa.com\",\n  \"password\": \"password123\",\n  \"department\": \"Computer Science\",\n  \"phone\": \"9876543210\",\n  \"studentId\": \"STU-100\"\n}" }
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Student\",\n  \"email\": \"test@acadexa.com\",\n  \"password\": \"password123\",\n  \"department\": \"Computer Science\",\n  \"phone\": \"9876543210\",\n  \"studentId\": \"STU-100\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('201 Created', () => pm.response.to.have.status(201));", "if (pm.response.code === 201) pm.collectionVariables.set('studentId', pm.response.json().student.id);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('studentId', pm.response.json().student.id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Login (Student)",
           "request": {
-            "auth": { "type": "noauth" }, "method": "POST", "url": "{{baseUrl}}/auth/login",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"email\": \"student@acadexa.com\",\n  \"password\": \"student123\"\n}" }
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"student@acadexa.com\",\n  \"password\": \"student123\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('200 OK', () => pm.response.to.have.status(200));", "const j = pm.response.json();", "pm.collectionVariables.set('token', j.token);", "pm.collectionVariables.set('studentId', j.user.id);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set('token', j.token);",
+                  "pm.collectionVariables.set('studentId', j.user.id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Login (Admin)",
           "request": {
-            "auth": { "type": "noauth" }, "method": "POST", "url": "{{baseUrl}}/auth/login",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@acadexa.com\",\n  \"password\": \"admin12345\"\n}" }
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@acadexa.com\",\n  \"password\": \"admin12345\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('200 OK', () => pm.response.to.have.status(200));", "pm.collectionVariables.set('token', pm.response.json().token);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "Get current user (protected)", "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" } },
+        {
+          "name": "Get current user (protected)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me"
+          }
+        },
         {
           "name": "Login with wrong password -> 401",
           "request": {
-            "auth": { "type": "noauth" }, "method": "POST", "url": "{{baseUrl}}/auth/login",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"email\": \"student@acadexa.com\", \"password\": \"wrong-password\" }" }
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"student@acadexa.com\", \"password\": \"wrong-password\" }"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Register invalid input -> 400",
           "request": {
-            "auth": { "type": "noauth" }, "method": "POST", "url": "{{baseUrl}}/auth/register",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"name\": \"A\", \"email\": \"not-an-email\", \"password\": \"123\" }" }
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"name\": \"A\", \"email\": \"not-an-email\", \"password\": \"123\" }"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('400 Bad Request', () => pm.response.to.have.status(400));"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400 Bad Request', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
     {
       "name": "Students",
       "item": [
-        { "name": "GET /students (admin)", "request": { "method": "GET", "url": "{{baseUrl}}/students" } },
-        { "name": "GET /students/:id", "request": { "method": "GET", "url": "{{baseUrl}}/students/{{studentId}}" } },
+        {
+          "name": "GET /students (admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/students"
+          }
+        },
+        {
+          "name": "GET /students/:id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/students/{{studentId}}"
+          }
+        },
         {
           "name": "PUT /students/:id",
           "request": {
-            "method": "PUT", "url": "{{baseUrl}}/students/{{studentId}}",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Updated Name\",\n  \"department\": \"Information Technology\"\n}" }
+            "method": "PUT",
+            "url": "{{baseUrl}}/students/{{studentId}}",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"department\": \"Information Technology\"\n}"
+            }
           }
         },
-        { "name": "DELETE /students/:id", "request": { "method": "DELETE", "url": "{{baseUrl}}/students/{{studentId}}" } },
-        { "name": "GET /students without token -> 401", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/students" }, "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"] } }] }
+        {
+          "name": "DELETE /students/:id",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/students/{{studentId}}"
+          }
+        },
+        {
+          "name": "GET /students without token -> 401",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/students"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
       ]
     },
     {
       "name": "Courses",
       "item": [
-        { "name": "GET /courses (public)", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/courses" }, "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["const c = pm.response.json().courses; if (c && c.length) pm.collectionVariables.set('courseId', c[0].id);"] } }] },
-        { "name": "GET /courses/:id", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/courses/{{courseId}}" } },
+        {
+          "name": "GET /courses (public)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/courses"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const c = pm.response.json().courses; if (c && c.length) pm.collectionVariables.set('courseId', c[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /courses/:id",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/courses/{{courseId}}"
+          }
+        },
+        {
+          "name": "GET /courses/:id/full (admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/courses/{{courseId}}/full"
+          }
+        },
         {
           "name": "POST /courses (admin)",
           "request": {
-            "method": "POST", "url": "{{baseUrl}}/courses",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Cloud Computing Basics\",\n  \"description\": \"Intro to cloud platforms and deployment.\",\n  \"duration\": \"6 Weeks\",\n  \"instructor\": \"Mr. Ravi\"\n}" }
+            "method": "POST",
+            "url": "{{baseUrl}}/courses",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cloud Computing Basics\",\n  \"description\": \"Intro to cloud platforms and deployment.\",\n  \"duration\": \"6 Weeks\",\n  \"instructor\": \"Mr. Ravi\"\n}"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('201 Created', () => pm.response.to.have.status(201));", "if (pm.response.code === 201) pm.collectionVariables.set('courseId', pm.response.json().course.id);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set('courseId', pm.response.json().course.id);"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "PUT /courses/:id (admin)",
           "request": {
-            "method": "PUT", "url": "{{baseUrl}}/courses/{{courseId}}",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"duration\": \"8 Weeks\" }" }
+            "method": "PUT",
+            "url": "{{baseUrl}}/courses/{{courseId}}",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"duration\": \"8 Weeks\" }"
+            }
           }
         },
-        { "name": "DELETE /courses/:id (admin)", "request": { "method": "DELETE", "url": "{{baseUrl}}/courses/{{courseId}}" } },
+        {
+          "name": "DELETE /courses/:id (admin)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/courses/{{courseId}}"
+          }
+        },
         {
           "name": "POST /courses as student -> 403",
           "request": {
-            "method": "POST", "url": "{{baseUrl}}/courses",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"title\": \"Hack\", \"description\": \"x\", \"duration\": \"1\" }" }
+            "method": "POST",
+            "url": "{{baseUrl}}/courses",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\": \"Hack\", \"description\": \"x\", \"duration\": \"1\" }"
+            }
           },
           "description": "Login as STUDENT first. Expect 403 Forbidden."
         }
@@ -128,40 +422,150 @@
         {
           "name": "POST /enrollments (enroll)",
           "request": {
-            "method": "POST", "url": "{{baseUrl}}/enrollments",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"courseId\": \"{{courseId}}\" }" }
+            "method": "POST",
+            "url": "{{baseUrl}}/enrollments",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"courseId\": \"{{courseId}}\" }"
+            }
           },
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["if (pm.response.code === 201) pm.collectionVariables.set('enrollmentId', pm.response.json().enrollment.id);"] } }]
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set('enrollmentId', pm.response.json().enrollment.id);"
+                ]
+              }
+            }
+          ]
         },
-        { "name": "GET /enrollments/me", "request": { "method": "GET", "url": "{{baseUrl}}/enrollments/me" } },
         {
-          "name": "PATCH /enrollments/:id (progress)",
+          "name": "GET /enrollments/me",
           "request": {
-            "method": "PATCH", "url": "{{baseUrl}}/enrollments/{{enrollmentId}}",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"progress\": 50 }" }
+            "method": "GET",
+            "url": "{{baseUrl}}/enrollments/me"
           }
         },
-        { "name": "DELETE /enrollments/:id (unenroll)", "request": { "method": "DELETE", "url": "{{baseUrl}}/enrollments/{{enrollmentId}}" } },
-        { "name": "GET /enrollments (admin - all)", "request": { "method": "GET", "url": "{{baseUrl}}/enrollments" } }
+        {
+          "name": "DELETE /enrollments/:id (unenroll)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/enrollments/{{enrollmentId}}"
+          }
+        },
+        {
+          "name": "GET /enrollments (admin - all)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/enrollments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Learning & Quiz (student)",
+      "item": [
+        {
+          "name": "GET /learning/:enrollmentId",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/learning/{{enrollmentId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const m = pm.response.json().course.modules.find(x => !x.completed); if (m) pm.collectionVariables.set('moduleId', m.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /learning/:enrollmentId/modules/:moduleId/complete",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/learning/{{enrollmentId}}/modules/{{moduleId}}/complete"
+          }
+        },
+        {
+          "name": "POST /learning/:enrollmentId/quiz",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/learning/{{enrollmentId}}/quiz",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"answers\": [1, 1, 1, 2, 1] }"
+            }
+          },
+          "description": "Quiz is locked (403) until every module is completed."
+        }
       ]
     },
     {
       "name": "Notifications & Chat",
       "item": [
-        { "name": "GET /notifications", "request": { "method": "GET", "url": "{{baseUrl}}/notifications" } },
-        { "name": "PATCH /notifications/read-all", "request": { "method": "PATCH", "url": "{{baseUrl}}/notifications/read-all" } },
+        {
+          "name": "GET /notifications",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/notifications"
+          }
+        },
+        {
+          "name": "PATCH /notifications/read-all",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/notifications/read-all"
+          }
+        },
         {
           "name": "POST /notifications/broadcast (admin)",
           "request": {
-            "method": "POST", "url": "{{baseUrl}}/notifications/broadcast",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{ \"title\": \"Holiday notice\", \"message\": \"The campus is closed on Friday.\" }" }
+            "method": "POST",
+            "url": "{{baseUrl}}/notifications/broadcast",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\": \"Holiday notice\", \"message\": \"The campus is closed on Friday.\" }"
+            }
           }
         },
-        { "name": "GET /messages/contacts", "request": { "method": "GET", "url": "{{baseUrl}}/messages/contacts" } },
-        { "name": "GET /stats (admin)", "request": { "method": "GET", "url": "{{baseUrl}}/stats" } }
+        {
+          "name": "GET /messages/contacts",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/messages/contacts"
+          }
+        },
+        {
+          "name": "GET /stats (admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/stats"
+          }
+        }
       ]
     }
   ]

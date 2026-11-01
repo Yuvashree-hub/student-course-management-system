@@ -8,6 +8,7 @@ dotenv.config();
 
 const { default: User } = await import('../models/User.js');
 const { default: Course } = await import('../models/Course.js');
+const { courseContent } = await import('./courseContent.js');
 
 const adminEmail = (process.env.ADMIN_EMAIL || 'admin@acadexa.com').toLowerCase();
 const adminPassword = process.env.ADMIN_PASSWORD || 'admin12345';
@@ -56,6 +57,24 @@ try {
     console.log('✔ Sample courses created');
   } else {
     console.log('• Courses already exist, skipping');
+  }
+
+  // Add lessons + quiz to courses that have none yet (never overwrites content you wrote yourself)
+  const missing = [];
+  for (const course of await Course.find()) {
+    if (course.modules.length > 0 || course.quiz.length > 0) continue;
+    const content = courseContent[course.title];
+    if (!content) {
+      missing.push(course.title);
+      continue;
+    }
+    course.modules = content.modules;
+    course.quiz = content.quiz;
+    await course.save();
+    console.log(`✔ Learning content added: ${course.title}`);
+  }
+  if (missing.length) {
+    console.log(`• No sample content for: ${missing.join(', ')} (add it in Admin -> Manage Courses)`);
   }
 } catch (err) {
   console.error('Seed failed:', err.message);

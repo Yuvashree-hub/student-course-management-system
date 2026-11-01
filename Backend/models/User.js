@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema(
     department: { type: String, trim: true, default: '' },
     phone: { type: String, trim: true, default: '' },
     role: { type: String, enum: ['student', 'admin'], default: 'student' },
+    // password-reset (only the SHA-256 hash of the emailed token is stored)
+    resetTokenHash: { type: String, select: false },
+    resetTokenExpires: { type: Date, select: false },
   },
   { timestamps: true }
 );
@@ -29,6 +32,8 @@ userSchema.set('toJSON', {
     delete ret._id;
     delete ret.__v;
     delete ret.passwordHash;
+    delete ret.resetTokenHash;
+    delete ret.resetTokenExpires;
     return ret;
   },
 });

@@ -9,6 +9,7 @@ import enrollmentRoutes from './enrollmentRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
 import messageRoutes from './messageRoutes.js';
 import statsRoutes from './statsRoutes.js';
+import learningRoutes from './learningRoutes.js';
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.use('/auth', authRoutes);
 router.use('/students', studentRoutes);
 router.use('/courses', courseRoutes);
 router.use('/enrollments', enrollmentRoutes);
+router.use('/learning', learningRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/messages', messageRoutes);
 router.use('/stats', statsRoutes);
