@@ -36,7 +36,7 @@ export default function AdminLogin() {
     <section className="login-section">
       <div className="login-card admin-card">
         <h2>Admin Portal Login</h2>
-        <p className="subtitle">Default admin is created by <code>npm run seed</code>.</p>
+        <p className="subtitle"></p>
         <form onSubmit={handleSubmit} noValidate>
           <FormField label="Admin Email" type="email" placeholder="admin@acadexa.com" {...field('email')} />
           <FormField label="Password" type="password" {...field('password')} />
